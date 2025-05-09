@@ -6,10 +6,14 @@ path_dst=$1
 Sources=(
 	Models/FHN/CU/CU.png
 
-	Models/Karma_Ramp/CU.png
-	Models/Karma_Step/CU.png
+	Models/Karma_Ramp/CU/CU.png
+	Models/Karma_Step/CU/CU.png
 
-	Models/MorrisLecar/CU.png
+	Models/Karma_Ramp/Nullclines/NullclineComparisons.png
+	Models/Karma_Step/Nullclines/NullclineComparisons.png
+
+	Models/MorrisLecar/CU/CU.png
+	Models/MorrisLecar/Nullclines/NullclineComparisons.png
 )
 
 
@@ -19,7 +23,11 @@ Names=(
 	Karma_Ramp_CU.png
 	Karma_Step_CU.png
 
+	Karma_Ramp_Nullclines.png
+	Karma_Step_Nullclines.png
+
 	MorrisLecar_CU.png
+	MorrisLecar_Nullclines.png
 )
 
 
