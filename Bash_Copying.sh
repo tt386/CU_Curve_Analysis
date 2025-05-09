@@ -6,11 +6,20 @@ path_dst=$1
 Sources=(
 	Models/FHN/CU/CU.png
 
+	Models/Karma_Ramp/CU.png
+	Models/Karma_Step/CU.png
+
+	Models/MorrisLecar/CU.png
 )
 
 
 Names=(
 	FHN_CU.png
+
+	Karma_Ramp_CU.png
+	Karma_Step_CU.png
+
+	MorrisLecar_CU.png
 )
 
 
