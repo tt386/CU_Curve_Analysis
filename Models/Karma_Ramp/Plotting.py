@@ -66,7 +66,7 @@ handles = [
 
 plt.legend(handles=handles,loc='upper left')
 
-plt.ylim(0,10)
+plt.ylim(0,3)
 plt.xlim(-2.5,0.5)
 
 plt.title("Karma Ramp")
