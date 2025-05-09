@@ -55,7 +55,7 @@ for i in range(len(blocks)):
 plt.grid()
 
 plt.ylabel("c")
-plt.xlabel("I")
+plt.xlabel("p")
 
 
 #Add legends manually

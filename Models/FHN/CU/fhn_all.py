@@ -8,3 +8,10 @@ u=run(u('HB1'),ISW=2,ICP=[1,2],UZSTOP={'s':[1.5]})
 u=run(u('UZ1'),DS='-',NMX=200,DSMAX=5e-2)
 plot c+u
 
+c.toArray()
+c.writeRawFilename("hom.dat")
+
+u.toArray()
+u.writeRawFilename("u_curve.dat")
+
+

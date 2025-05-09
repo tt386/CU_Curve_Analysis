@@ -66,10 +66,10 @@ handles = [
 
 plt.legend(handles=handles,loc='upper left')
 
-plt.ylim(0,10)
-plt.xlim(-2.5,0.5)
+plt.ylim(0.25,1.5)
+plt.xlim(-0.1,0.6)
 
-plt.title("Karma Step")
+plt.title("FHN")
 
 plt.savefig("CU.png")
 
@@ -95,7 +95,7 @@ k_small=0.01
 
 
 def H(x,k):
-    return 1/(1 + np.exp(-2*x/k))
+    return x/(1 + np.exp(-2*x/k))
 
 stable_I = []
 stable_c = []
@@ -108,7 +108,7 @@ def V_Nullcline(u):
     return H(u-1,k_small)/nb
 
 def W_Nullcline(u):
-
+    
     #return np.where(us + (I-u)/(2*(u**2-d*u**3)) < 0,-1,(us + (I-u)/(2*(u**2-d*u**3)))**(1/M))
     """
     if us + (I-u)/(2*(u**2-d*u**3)) > 0:
@@ -124,6 +124,7 @@ def DiffFunc(V):
 
 
 u = np.linspace(-1,2,100)
+
 for i in range(len(blocks)):
     block = np.asarray(blocks[i])
     for i in range(len(block[:,0])):
@@ -133,39 +134,46 @@ for i in range(len(blocks)):
         for offset in [-0.1,0.1]:
             c = c_orig + offset
 
-            try:
-                root = optimize.newton(DiffFunc,1)
-
-                u = root
-                v = V_Nullcline(u)
-
-
+            root = optimize.newton(DiffFunc,1.5)
+    
+            u = root
+            v = V_Nullcline(u)
+            
+            if u > 1:
                 Jacobian = [[0,1,0],
                             [1/D * (-2 *(2*u-3*d*u**2)*(us-v**M) + 1),c/D,1/D*2*M*v**(M-1)*(u**2-d*u**3)],
-                            [e/c / nb * 2 * np.exp(-2*(u-1)/k_small) / (k_small * (1 + np.exp(-2*(u-1)/k_small))**2),0,-e/c]]
+                            [e/c / nb,0,-e/c]]
+            else:
+                Jacobian = [[0,1,0],
+                            [1/D * (-2 *(2*u-3*d*u**2)*(us-v**M) + 1),c/D,1/D*2*M*v**(M-1)*(u**2-d*u**3)],
+                            [0,0,-e/c]]
 
-                eigenvalues,eigenvectors = np.linalg.eig(Jacobian)
+
+            eigenvalues,eigenvectors = np.linalg.eig(Jacobian)
 
 
-                unstable = False
-                for eigenval in eigenvalues:
-                    if np.imag(eigenval) != 0:
-                        if np.real(eigenval) > 0:
-                            unstable_I.append(I)
-                            unstable_c.append(c)
-                            unstable = True
+            unstable = False
+            for eigenval in eigenvalues:
+                if np.imag(eigenval) != 0:
+                    if np.real(eigenval) > 0:
+                        unstable_I.append(I)
+                        unstable_c.append(c)
+                        unstable = True
 
-                            break
-                if not unstable:
-                    stable_I.append(I)
-                    stable_c.append(c)
-            except:
-                print("Error:",I,c)
+                        break
+            if not unstable:
+                stable_I.append(I)
+                stable_c.append(c)
+
 plt.scatter(stable_I,stable_c,color='g',label='stable',s=0.9)
 plt.scatter(unstable_I,unstable_c,color='b',label='unstable',s=0.9)
 plt.legend()
 plt.ylim(-0.1,10)
 plt.savefig("Plotting_Stability.png")
+
+
+
+
 
 
 
