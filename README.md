@@ -4,7 +4,9 @@
 
 Navigate to directory of the model you wosh to run, enter the auto environment, then execute:
 
-``execfile(model_all.py)``
+``execfile("<model>_all.py")``
+
+Where ``<model>`` is either ``fhn``, ``karma`` or ``morrislecar``.
 
 
 ## Directory structure and exectuing code
