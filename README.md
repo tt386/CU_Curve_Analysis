@@ -13,13 +13,20 @@ Below is a tree respresenting the structure of directories.
 
 ```
 .
-├── RawFigs
-└── Models
-    ├── FHN
-    ├── Fig1_InitialObservation
-    ├── Fig2_CompleteDistComparisons
-    ├── Fig2_CompleteDistComparisons_VaryN
-    ├── Fig3_SmallC
-    └── Fig4_FullTheory
-
+├── Bash_Copying.sh
+├── Models
+│   ├── FHN
+│   │   └── CU
+│   ├── Karma_Ramp
+│   │   ├── CU
+│   │   └── Nullclines
+│   ├── Karma_Step
+│   │   ├── CU
+│   │   └── Nullclines
+│   └── MorrisLecar
+│       ├── CU
+│       └── Nullclines
+└── RawFigs
 ```
+
+Generally, for each model (Fitzhugh-Nagumo, Karma and Morris-Lecar) we analyse the C-U curve, and look to the Nullclines to understand termination of the homoclinic curves. 
