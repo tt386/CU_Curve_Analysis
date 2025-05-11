@@ -27,7 +27,7 @@ SUBROUTINE FUNC(NDIM,U,ICP,PAR,IJAC,F,DFDU,DFDP)
   DOUBLE PRECISION, INTENT(INOUT) :: DFDU(NDIM,NDIM),DFDP(NDIM,*)
 
 
-  DOUBLE PRECISION v,y,n,I,gL,gCa,gK,vL,vCa,vK,v1,v2,v3,v4,phi,Diff,c,Mss,Nss,tN
+  DOUBLE PRECISION v,y,n,I,gL,gCa,gK,vL,vCa,vK,v1,v2,v3,v4,phi,Diff,c,Cap,Mss,Nss,tN
 
   v = U(1)
   y = U(2)
@@ -47,7 +47,7 @@ SUBROUTINE FUNC(NDIM,U,ICP,PAR,IJAC,F,DFDU,DFDP)
   phi = PAR(14)
   Diff = PAR(15)
   c = PAR(16)
-
+  Cap = PAR(17)
 
   Mss = 0.5 * (1 + TANH((v-v1)/v2))
   Nss = 0.5 * (1 + TANH((v-v3)/v4))
@@ -56,8 +56,8 @@ SUBROUTINE FUNC(NDIM,U,ICP,PAR,IJAC,F,DFDU,DFDP)
 
 
   F(1) = y
-  F(2) = (c*y - I +gL*(v-vL) + gCa*Mss*(v-vCa) + gK*n*(v-vK))/Diff     !make c negative
-  F(3) = (Nss-n)/(tN*c)                                                !make c negative
+  F(2) = cap*(c*y - I/cap +gL*(v-vL)/cap + gCa*Mss*(v-vCa)/cap + gK*n*(v-vK)/cap)/Diff    
+  F(3) = (Nss-n)/(tN*c)                                              
 
 END SUBROUTINE FUNC
 
@@ -84,10 +84,10 @@ SUBROUTINE STPNT(NDIM,U,PAR,T)
   DOUBLE PRECISION, INTENT(IN) :: T
 
 ! Initialize the equation parameters
-  PAR(1) = 30/2!200
-  PAR(2) = 2/2!0.01!2
-  PAR(3) = 20/2!0.022!4.4
-  PAR(4) = 20/2!0.04!8
+  PAR(1) = 30!/2!200
+  PAR(2) = 2!/2!0.01!2
+  PAR(3) = 20!/2!0.022!4.4
+  PAR(4) = 20!/2!0.04!8
   PAR(5) = -70
   PAR(6) = 50
   PAR(7) = -100
@@ -98,6 +98,7 @@ SUBROUTINE STPNT(NDIM,U,PAR,T)
   PAR(14) = 0.15!0.0002!0.04
   PAR(15) = 1!0.025!5
   PAR(16) = 0.20!1
+  PAR(17) = 2
 
   ! Initialize the solution
   U(1) = -33.64!-8.686!-63.93!6.655!-60.855!For I=0

@@ -67,7 +67,7 @@ handles = [
 plt.legend(handles=handles,loc='upper left')
 
 plt.ylim(0,3)
-plt.xlim(-25,20)
+plt.xlim(-50,40)
 
 plt.title("Morris-Lecar")
 

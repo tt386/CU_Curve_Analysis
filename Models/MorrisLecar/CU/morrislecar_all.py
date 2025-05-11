@@ -12,10 +12,9 @@ import matplotlib.pyplot as plt
 #Load the karma.f90 and c.karma
 morrislecar = load('morrislecar')
 
-run1=run(morrislecar,UZSTOP={"I":[-20,20]})
-print(run1["c"])
+run1=run(morrislecar,UZSTOP={"I":[-20,40]},NMX=10000000,NPR=1000000)
 #Run backwards, and append
-run1_back= run(morrislecar,DS='-')
+run1_back= run(morrislecar,DS='-',UZSTOP={"I":[-20,40]},NMX=10000000,NPR=1000000)
 #Relabel
 run1 = merge(run1 + run1_back)#relabel(run1)
 #Plot bifurcation diagram
@@ -36,19 +35,20 @@ wait()
 """
 
 
-#Look for the U
+print("Look for the U")
 ##set new start label to the first HP label
-hb1=load(run1('HB1'),ISW=2,NMX=10000000,NPR=1000000,DS=0.001,DSMAX=0.1)
+hb1=load(run1('HB1'),ISW=2,NMX=100000,NPR=10000)#,DS=0.001,DSMAX=0.1)
 ##Continue from this label in two parameters
-u = run(hb1,UZSTOP={'c':[-10,10],'I':[-30,20]})
-u = u + run(hb1,DS='-',UZSTOP={'c':[-10,10],'I':[-30,20]})
+u = run(hb1,UZSTOP={'c':[-10,10],'I':[-60,40]})
+print("And the other way")
+u = u + run(hb1,DS='-',UZSTOP={'c':[-10,10],'I':[-60,40]})
 p = plot(u)
 p.config(bifurcation_y=['c'])
 p.config(stability=True)
 #p.config(top_title='U curve c=%0.2f'%(c))
 
 
-
+"""
 #ZH
 zh1 = load(u("ZH1"),ISW=2,NMX=1000000,NPR=100000,DS=0.001,DSMAX=0.1)
 zh = run(zh1,UZSTOP={'c':[-10,10]})
@@ -57,14 +57,14 @@ p = plot(zh)
 p.config(bifurcation_y=['c'])
 p.config(stability=True)
 #p.config(top_title='ZH c=%0.2f'%(c))
+"""
 
 
-
-
+print("Start period hunt")
 hb1_period = load(run1('HB1'),IPS=2,ICP=["I",11],NMX=1000000000,NPR=100000000,DS=0.001,DSMAX=0.1,SP=['BP0'])#,NTST=200,NCOL=4,RL0=0.1,RL1=1000)
 #Stop when the period is massive
 
-u_period = run(hb1_period,UZSTOP={"PERIOD":[-10,50000]})#{'PERIOD':[0,10000]})#UZSTOP={'PERIOD':1000})
+u_period = run(hb1_period,UZSTOP={"PERIOD":[-10,30000]})#{'PERIOD':[0,10000]})#UZSTOP={'PERIOD':1000})
 #u_period = u_period + run(hb1_period,UZSTOP={"PERIOD":[0,10000]},DS='-')
 
 p=plot(u_period + run1)
@@ -82,8 +82,8 @@ plt.close()
 #homoclinic = load(u_period("UZ1"),IPS=2,ICP=["I","c"],NMX=1000000,NPR=100,DS=0.00001,DSMAX=0.001,NTST=600,NCOL=6)
 homoclinic = load(u_period("UZ1"),IPS=2,ICP=["I","c"],NMX=1000000,NPR=10000,DS=0.00001,DSMAX=0.001,NTST=600,NCOL=6) #For less points labelled
 
-hom = run(homoclinic,UZSTOP={'c':[-10,10],'I':[-30,20]})
-hom = hom + run(homoclinic,DS='-',UZSTOP={'c':[-10,10],'I':[-30,20]})
+hom = run(homoclinic,UZSTOP={'c':[-10,10],'I':[-30,40]})
+hom = hom + run(homoclinic,DS='-',UZSTOP={'c':[-1,3],'I':[-30,40]})
 p=plot(hom + u)
 p.config(bifurcation_y='c')
 p.config(stability=True)
