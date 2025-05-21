@@ -26,12 +26,13 @@ C = 2#20
 
 I = 12.42#18.38
 
-
+"""
 gL/=C
 gCa/=C
 gk/=C
 #I /=C
 #phi/=200
+"""
 
 def MSS(V):
     return 1/2 * (1 + np.tanh((V-V1)/V2))
@@ -74,7 +75,7 @@ plt.figure()
 NN = Null_N(V)
 plt.plot(V,NN,color='k')
 
-for I in [15,18.38,20]:
+for I in [2*15,2*18.38,2*20]:
     
     NV = Null_V(V)
     plt.plot(V,NV,label='p=%0.3f'%(I))
