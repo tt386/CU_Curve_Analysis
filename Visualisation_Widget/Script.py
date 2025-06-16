@@ -24,7 +24,7 @@ PLAY = True
 
 
 root = tk.Tk()
-root.title("bleeheheh")
+root.title("Cardiomyocyte Excitation Models")
 
 
 
@@ -253,7 +253,7 @@ def Morris_Lecar(u,v,c,I):
 
     #Derive new uhat and what
     #alpha = 1/(1 - s*1j*k*dt + D*dt*k**2 + np.fft.fft(np.ones(len(x)))*gL*dt 
-    )#1/(1 - dt*(c*1j*k - D*k**2-1))#1/(1 + d*k**2*dt - s*1j*dt*k + a*dt)
+    #)#1/(1 - dt*(c*1j*k - D*k**2-1))#1/(1 + d*k**2*dt - s*1j*dt*k + a*dt)
     alpha = 1/(1 + s*1j*k*dt/C + D*dt*k**2/C + gL*dt/C )
     beta = 1/(1 + s*1j*k*dt)#1/(1 + e*dt-c*1j*k*dt)#1/(1 + g*e*dt - s*1j*dt*k)
     
@@ -298,7 +298,7 @@ fig, ax = plt.subplots()
 fig.canvas.manager.set_window_title('Cardiomyocyte Excitation Models')
 plt.subplots_adjust(bottom=0.5,right=0.8)
 line_u, = ax.plot(x, u, label='u')
-line_v, = ax.plot(x, v, label='v')
+line_v, = ax.plot(x, v, label='w')
 ax.legend()
 ax.grid(True)
 ax.set_ylim([-1, 1])

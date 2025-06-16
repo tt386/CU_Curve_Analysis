@@ -41,6 +41,10 @@ Vary the speed of the reference frame - when the travelling wave is stationary, 
 ### Input slider
 The input voltage. 
 
+### Play/Pause Button
+Stops and starts the model progression.
+
+
 ### 'Find Speed' checkbox
 Enables an algorithm which aims to find the reference frame speed which corresponds to the wave-speed. This is done by looking at the peak of the w curve, and adjusting the speed based on if the peak goes left or right. We keep track of previously explored speed values, and lower the speed step size accordingly so we hone in on a more precise result. Visibly, you should see that the wave becomes stationary.
 
