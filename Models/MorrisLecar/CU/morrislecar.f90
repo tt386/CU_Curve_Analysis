@@ -27,7 +27,7 @@ SUBROUTINE FUNC(NDIM,U,ICP,PAR,IJAC,F,DFDU,DFDP)
   DOUBLE PRECISION, INTENT(INOUT) :: DFDU(NDIM,NDIM),DFDP(NDIM,*)
 
 
-  DOUBLE PRECISION v,y,n,I,gL,gCa,gK,vL,vCa,vK,v1,v2,v3,v4,phi,Diff,c,Cap,Mss,Nss,tN
+  DOUBLE PRECISION v,y,n,I,gL,gCa,gK,vL,vCa,vK,v1,v2,v3,v4,phi,Diff,c,cap,Mss,Nss,tN
 
   v = U(1)
   y = U(2)
@@ -47,7 +47,7 @@ SUBROUTINE FUNC(NDIM,U,ICP,PAR,IJAC,F,DFDU,DFDP)
   phi = PAR(14)
   Diff = PAR(15)
   c = PAR(16)
-  Cap = PAR(17)
+  cap = PAR(17)
 
   Mss = 0.5 * (1 + TANH((v-v1)/v2))
   Nss = 0.5 * (1 + TANH((v-v3)/v4))

@@ -1,0 +1,19 @@
+A simple widget for trying to find the co-moving reference frame speed for travelling wave solution to different models of cardiomyocyte excitation
+
+The model employed can be toggled on the right with the radio box
+
+The speed of the comoving reference frame can be changed with the slider labelled 'c'
+
+The input voltage can be can be changed with the slider labelled 'I'
+
+
+The activation parameter can be changed by the user with three buttons:
+	- Reset: Sets u and v back to default
+	- Wipe Outside: Sets everything to 0 outside of the reio=gion selected with the space selector
+	- Perturb inside: Sets u to the value written in the 'Perturb' box
+
+
+Save the model with 'Save the System' at the bottom 
+
+
+The top right checkbox enables an algorithm to determine the c value which corresponds to the comoving reference frame being th same as the wave. 
