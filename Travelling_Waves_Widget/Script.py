@@ -82,9 +82,11 @@ def FHN(u,w,s,I):
     g = 1
     e = 0.01
 
-
-    def f(y,a):
-        return -y**3 + u**2 * (1+a)
+    #################################
+    # Nonlinear term                #
+    def f(y,a):                     #
+        return -y**3 + u**2 * (1+a) #
+    #################################
 
     Ihat = fft(ones*I)
 
@@ -129,12 +131,14 @@ def Karma_Ramp(u,v,c,I):
     e = 0.01
 
 
-
-    def f(u, v):
-        return 2 * (us - v ** M) * (u ** 2 - d * u ** 3)
-
-    def H(u):
-        return u / (1 + np.exp(-2 * u / 0.001))
+    #####################################################
+    #Nonlinear terms                                    #
+    def f(u, v):                                        #
+        return 2 * (us - v ** M) * (u ** 2 - d * u ** 3)#
+                                                        #
+    def H(u):                                           #
+        return u / (1 + np.exp(-2 * u / 0.001))         #
+    #####################################################
 
     Ihat = fft(ones*I)
 
@@ -143,8 +147,13 @@ def Karma_Ramp(u,v,c,I):
     fu = fft(f(u, v))
     HHat = fft(H(u - 1))
 
+    
     alpha = 1 / (1 - dt * (c * 1j * k - D * k ** 2 - 1))
     beta = 1 / (1 + e * dt - c * 1j * k * dt)
+    """
+    alpha = 1 / (1 - dt * (-c * 1j * k - D * k ** 2 - 1))
+    beta = 1 / (1 + e * dt + c * 1j * k * dt)
+    """
 
     uhat_new = alpha * (uhat + dt * (fu + Ihat))
     vhat_new = beta * (vhat + dt * e * HHat / nb)
@@ -167,11 +176,14 @@ def Karma_Step(u,v,c,I):
     e = 0.01
 
 
-    def f(u, v):
-        return 2 * (us - v ** M) * (u ** 2 - d * u ** 3)
-
-    def H(u):
-        return 1 / (1 + np.exp(-2 * u / 0.001))
+    #####################################################
+    #Nonlinear terms                                    #
+    def f(u, v):                                        #
+        return 2 * (us - v ** M) * (u ** 2 - d * u ** 3)#
+                                                        #
+    def H(u):                                           #
+        return 1 / (1 + np.exp(-2 * u / 0.001))         #
+    #####################################################
 
     Ihat = fft(ones*I)
 
@@ -180,8 +192,13 @@ def Karma_Step(u,v,c,I):
     fu = fft(f(u, v))
     HHat = fft(H(u - 1))
 
+
     alpha = 1 / (1 - dt * (c * 1j * k - D * k ** 2 - 1))
     beta = 1 / (1 + e * dt - c * 1j * k * dt)
+    """
+    alpha = 1 / (1 - dt * (-c * 1j * k - D * k ** 2 - 1))
+    beta = 1 / (1 + e * dt + c * 1j * k * dt)
+    """
 
     uhat_new = alpha * (uhat + dt * (fu + Ihat))
     vhat_new = beta * (vhat + dt * e * HHat / nb)
@@ -202,7 +219,7 @@ def Morris_Lecar(u,v,c,I):
 
     V1 = -1.2
     V2 = 18
-    V3 = 0  #VRIED PARAMETER: 0, -13, -21
+    V3 = -0  #VRIED PARAMETER: 0, -13, -21
     V4 = 10#30
     phi = 0.15#0.04
     Vk = -100#-84
@@ -236,16 +253,15 @@ def Morris_Lecar(u,v,c,I):
                                         #
     def n(V,N):                         #
         return (NSS(V) - N)/tN(V)       #
-                                        #
     #####################################
 
-
+    #Fourier transform the basic info
     Ihat = np.fft.fft(ones*I)
 
     Vhat = np.fft.fft(V)
     Nhat = np.fft.fft(N)
 
-    #Fourier transoform the function
+    #Fourier transoform the nonlinear functions
     fhat = np.fft.fft(f(V,N))
     ghat = np.fft.fft(g(V,N))
     nhat = np.fft.fft(n(V,N))
@@ -254,12 +270,12 @@ def Morris_Lecar(u,v,c,I):
     #Derive new uhat and what
     #alpha = 1/(1 - s*1j*k*dt + D*dt*k**2 + np.fft.fft(np.ones(len(x)))*gL*dt 
     #)#1/(1 - dt*(c*1j*k - D*k**2-1))#1/(1 + d*k**2*dt - s*1j*dt*k + a*dt)
-    alpha = 1/(1 + s*1j*k*dt/C + D*dt*k**2/C + gL*dt/C )
-    beta = 1/(1 + s*1j*k*dt)#1/(1 + e*dt-c*1j*k*dt)#1/(1 + g*e*dt - s*1j*dt*k)
+    alpha = 1/(1 - s*1j*k*dt/C + D*dt*k**2/C + gL*dt/C )
+    beta = 1/(1 - s*1j*k*dt)#1/(1 + e*dt-c*1j*k*dt)#1/(1 + g*e*dt - s*1j*dt*k)
     
     Nhat_new = beta * (Nhat + dt*nhat) 
     
-    Vhat_new = alpha * (Vhat + dt/C*(Ihat + np.fft.fft(np.ones(len(x))*gL*VL)
+    Vhat_new = alpha * (Vhat + dt/C*(Ihat + np.fft.fft(ones*gL*VL)
         - fhat - ghat + gk*Vk*Nhat_new))
 
 
@@ -335,7 +351,7 @@ c_slider = Slider(ax_slider, 'Speed', -3.0, 10.0, valinit=c_init)
 # slider setup: change the current
 ##############################################################################
 ax_Islider = ax_slider = plt.axes([0.1, 0.1, 0.8, 0.03])
-I_slider = Slider(ax_Islider, 'Input', -10.0, 10.0, valinit=I0)
+I_slider = Slider(ax_Islider, 'Input', -10.0, 40.0, valinit=I0)
 
 
 ##############################################################################
@@ -545,6 +561,10 @@ def select_model(label):
         ax.set_ylim([-100,100])#[-1, 6])
 
 
+    #Run this so if the algorithm is being run it ets reset
+    Create_CList(True)
+
+
 radio.on_clicked(select_model)
 
 
@@ -585,7 +605,18 @@ def update_plot(frame):
             if checkbox.get_status()[0] == True:
                 global dc
 
-                new_max = np.argmax(v_new)#v_new)
+                """
+                if model_func in (Morris_Lecar,Karma_Ramp):
+                    #print(maxima_x)
+
+                    new_max = np.argmax(u_new)
+
+                else:
+                    new_max = np.argmax(v_new)#v_new)
+                """
+
+                new_max = np.argmax(u_new)
+
 
                 #populate a list of locations of maxima
                 if len(maxima_x) ==0:
@@ -715,7 +746,10 @@ def load_file():
 
 def save_file():
     # Suggest default filename based on model
-    default_filename = str(radio.value_selected).replace(" ", "_") + ".npz"
+    default_filename = str(str(radio.value_selected).replace(" ", "_") +
+    "_p_%0.3f"%(I_slider.val) +
+    "_c_%0.3f"%(c_slider.val) +
+    ".npz")
 
     filepath = filedialog.asksaveasfilename(
         title="Save File As",
