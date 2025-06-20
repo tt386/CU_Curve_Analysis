@@ -337,240 +337,239 @@ canvas_widget.grid(row=0, column=0, columnspan=4)
 
 
 
-
-
-
-##############################################################################
-# Slider setup: change the speed
-##############################################################################
-ax_slider = plt.axes([0.1, 0.2, 0.8, 0.03])
-c_slider = Slider(ax_slider, 'Speed', -3.0, 10.0, valinit=c_init)
-
-
-##############################################################################
-# slider setup: change the current
-##############################################################################
-ax_Islider = ax_slider = plt.axes([0.1, 0.1, 0.8, 0.03])
-I_slider = Slider(ax_Islider, 'Input', -10.0, 40.0, valinit=I0)
-
-
-##############################################################################
-# Button setup: reset
-##############################################################################
-
-button_ax = plt.axes([0.1, 0.3, 0.2, 0.04])  # [left, bottom, width, height]
-reset_button = Button(button_ax, 'Reset')
-reset_button.on_clicked(Initialise)
-
-
-
-
-
-
-
-
-##############################################################################
-#Button setup: wipes region outside of a target
-##############################################################################
-def zero_space(event):
-    u = state['u']
-    v = state['v']
-
-    x0, x1 = range_slider.val
-
-    u[x<x0] = 0
-    u[x>x1] = 0
-
-    v[x<x0] = 0
-    v[x>x1] = 0
-
-    state['u'] = u
-    state['v'] = v
-
-button_ax = plt.axes([0.4, 0.3, 0.2, 0.04])  # [left, bottom, width, height]
-transform_button = Button(button_ax, 'Wipe Outside')
-transform_button.on_clicked(zero_space)
-
-
-##############################################################################
-# Textbox for numerical input for perturbation
-##############################################################################
-
-axbox = plt.axes([0.775, 0.25, 0.05, 0.05])
-text_box = TextBox(axbox, 'Perturb:', initial="0")
-
-##############################################################################
-#Button setup: perturbs within the space
-##############################################################################
-
-def perturb(event):
-    try:
-        u = state ['u']
-        
-        a = float(text_box.text)
-
-        x0,x1 = range_slider.val
-
-        u[(x >= x0) & (x <= x1)] = a
-
-    except ValueError:
-        print("Please enter a number!")
-
-
-button_ax = plt.axes([0.7, 0.3, 0.2, 0.04])  # [left, bottom, width, height]
-perturb_button = Button(button_ax, 'Perturb Inside')
-perturb_button.on_clicked(perturb)
-
-##############################################################################
-###Wiping Space button
 #############################################################################
-#slider allows us to indicate where the space is wiped
-range_ax = plt.axes([0.1, 0.35, 0.7, 0.03])  # full-width at the bottom
-range_slider = RangeSlider(
-    ax=range_ax,
-    label="",
-    valmin=x.min(),
-    valmax=x.max(),
-    valinit=(0, 200),
-)
-
-
-# Get bounding box of the range_ax in figure coordinates
-bbox = range_ax.get_position()
-
-# Place custom label just above the slider
-fig.text(
-    x=(bbox.x0 + bbox.x1) / 2,  # center of the slider
-    y=bbox.y1 + 0.01,           # a little above the top edge
-    s="Space Selector",
-    ha='center',
-    va='bottom',
-    fontsize=10
-)
-
-
-# Initial rectangle parameters
-left,right = range_slider.val
-
-rect = patches.Rectangle(
-    (left, -100), #bottom left corner coords
-    right-left, #Width
-    200,     #height
-    linewidth=1,
-    edgecolor='red',
-    facecolor='black',
-    alpha=0.2
-)
-
-ax.add_patch(rect)
-
-##############################################################################
-# Button setup for saving
-##############################################################################
-"""
-def save(event):
-    u, v, t, c, I = (state['u'],
-            state['v'],
-            state['t'],
-            c_slider.val,
-            I_slider.val)
-
-
-    model = radio.value_selected
-
-    savename = str("SaveFiles/" + 
-            str(radio.value_selected).replace(" ","_") + 
-            ".npz")
-
-    np.savez(savename,
-            x=x,
-            u=u,
-            v=v,
-            t=t,
-            I=I,
-            c=c,
-            model=model)
-
-#Button to save data
-savebutton_ax = plt.axes([0.25,0.01,0.5,0.04])
-savebutton = Button(savebutton_ax,'Save the sysem')
-savebutton.on_clicked(save)
-"""
-
-
-##############################################################################
-# Button for toggling play and pause
-##############################################################################
-
-def toggle_play(event):
-    global PLAY
-    PLAY = not PLAY
-    if PLAY:
-        play_button.label.set_text("Pause")
-    else:
-        play_button.label.set_text("Play")
-    #plt.draw()
-
-
-play_ax = plt.axes([0.25,0.01,0.5,0.04])  # Adjust position as needed
-play_button = Button(play_ax, 'Pause' if PLAY else 'Play')
-play_button.on_clicked(toggle_play)
-
-
-##############################################################################
-# Checkbox setup for finding the stationary speed
-##############################################################################
-
-clist = []
-maxima_x = []
-dc = 0.1
-def Create_CList(event):
-    global clist
-    global maxima_x
-    global dc
-
-    clist = []
-    maxima_x = []
-    dc = 0.1
-
-#checkbox: automatically adjusts c
-checkbox_ax = plt.axes([0.8,0.7,0.2,0.1]) #left, bottom, width and height
-checkbox = CheckButtons(checkbox_ax,['Find speed'],[False])
-checkbox.on_clicked(Create_CList)
-
-##############################################################################
-# Radio setup for changing the employed model
-##############################################################################
-
-# Add RadioButtons
-rax = plt.axes([0.8, 0.5, 0.2, 0.15])  # [left, bottom, width, height]
-radio = RadioButtons(rax, tuple(model_map.keys()))
-
-# Event handler
-def select_model(label):
-    global model_func
-    model_func = model_map[label]
-   
-    if model_func == FHN:
-        ax.set_ylim(-0.5,1)
-
-    elif model_func in (Karma_Ramp,Karma_Step):
-        ax.set_ylim([-1, 6])
-
-    else:
-        ax.set_ylim([-100,100])#[-1, 6])
-
-
-    #Run this so if the algorithm is being run it ets reset
-    Create_CList(True)
-
-
-radio.on_clicked(select_model)
+#Sliders                                                                    #
+                                                                            #
+                                                                            #
+#############################################################################
+### Perturbation Slider                                                     #
+#############################################################################
+#slider allows us to indicate where the space is wiped                      #
+range_ax = plt.axes([0.1, 0.35, 0.7, 0.03])  # full-width at the bottom     #
+range_slider = RangeSlider(                                                 #
+    ax=range_ax,                                                            #
+    label="",                                                               #
+    valmin=x.min(),                                                         #
+    valmax=x.max(),                                                         #
+    valinit=(0, 200),                                                       #
+)                                                                           #
+                                                                            #
+                                                                            #
+# Get bounding box of the range_ax in figure coordinates                    #
+bbox = range_ax.get_position()                                              #
+                                                                            #
+# Place custom label just above the slider                                  #
+fig.text(                                                                   #
+    x=(bbox.x0 + bbox.x1) / 2,  # center of the slider                      #
+    y=bbox.y1 + 0.01,           # a little above the top edge               #
+    s="Space Selector",                                                     #
+    ha='center',                                                            #
+    va='bottom',                                                            #
+    fontsize=10                                                             #
+)                                                                           #
+                                                                            #
+                                                                            #
+# Initial rectangle parameters                                              #
+left,right = range_slider.val                                               #
+                                                                            #
+rect = patches.Rectangle(                                                   #
+    (left, -100), #bottom left corner coords                                #
+    right-left, #Width                                                      #
+    200,     #height                                                        #
+    linewidth=1,                                                            #
+    edgecolor='red',                                                        #
+    facecolor='black',                                                      #
+    alpha=0.2                                                               #
+)                                                                           #
+                                                                            #
+ax.add_patch(rect)                                                          #
+                                                                            #
+#############################################################################
+# Slider setup: change the speed                                            #
+#############################################################################
+ax_slider = plt.axes([0.1, 0.2, 0.8, 0.03])                                 #
+c_slider = Slider(ax_slider, 'Speed', -3.0, 10.0, valinit=c_init)           #
+                                                                            #
+#############################################################################
+# slider setup: change the current                                          #
+#############################################################################
+ax_Islider = ax_slider = plt.axes([0.1, 0.1, 0.8, 0.03])                    #
+I_slider = Slider(ax_Islider, 'Input', -10.0, 40.0, valinit=I0)             #
+                                                                            #
+#############################################################################                                                                            
 
 
 
 
 
+
+
+
+#############################################################################
+# Buttons                                                                   #
+                                                                            #
+                                                                            #
+#############################################################################
+# Button setup: reset                                                       #
+#############################################################################
+                                                                            #
+button_ax = plt.axes([0.1, 0.3, 0.2, 0.04])  # [left, bottom, width, height]#
+reset_button = Button(button_ax, 'Reset')                                   #
+reset_button.on_clicked(Initialise)                                         #
+                                                                            #
+#############################################################################
+# Textbox for numerical input for perturbation                              #
+#############################################################################
+                                                                            #
+axbox_ext = plt.axes([0.475, 0.25, 0.05, 0.05])                             #
+text_box_ext = TextBox(axbox_ext, 'Perturb:', initial="0")                  #
+                                                                            #
+                                                                            #
+                                                                            #
+#############################################################################
+#Button setup: wipes region outside of a target                             #
+#############################################################################
+def perturb_outside(event):                                                 #
+                                                                            #
+    try:                                                                    #
+        u = state['u']                                                      #
+        v = state['v']                                                      #
+                                                                            #
+        a = float(text_box_ext.text)                                        #
+                                                                            #
+        x0, x1 = range_slider.val                                           #
+                                                                            #
+        u[x<x0] = a                                                         #
+        u[x>x1] = a                                                         #
+                                                                            #
+        v[x<x0] = a                                                         #
+        v[x>x1] = a                                                         #
+                                                                            #
+        state['u'] = u                                                      #
+        state['v'] = v                                                      #
+                                                                            #
+    except ValueError:                                                      #
+        print("Please enter a number!")                                     #
+                                                                            #
+button_ax = plt.axes([0.4, 0.3, 0.2, 0.04])  # [left, bottom, width, height]#
+transform_button = Button(button_ax, 'Perturb Outside')                     #
+transform_button.on_clicked(perturb_outside)                                #
+#############################################################################
+                                                                            #
+                                                                            #
+                                                                            #
+#############################################################################
+# Textbox for numerical input for perturbation                              #
+#############################################################################
+                                                                            #
+axbox = plt.axes([0.775, 0.25, 0.05, 0.05])                                 #
+text_box = TextBox(axbox, 'Perturb:', initial="0")                          #
+                                                                            #
+#############################################################################
+#Button setup: perturbs within the space                                    #
+#############################################################################
+                                                                            #
+def perturb_inside(event):                                                  #
+    try:                                                                    #
+        u = state ['u']                                                     #
+                                                                            #
+        a = float(text_box.text)                                            #
+                                                                            #
+        x0,x1 = range_slider.val                                            #
+                                                                            #
+        u[(x >= x0) & (x <= x1)] = a                                        #
+                                                                            #
+    except ValueError:                                                      #
+        print("Please enter a number!")                                     #
+                                                                            #
+                                                                            #
+button_ax = plt.axes([0.7, 0.3, 0.2, 0.04])  # [left, bottom, width, height]#
+perturb_button = Button(button_ax, 'Perturb Inside')                        #
+perturb_button.on_clicked(perturb_inside)                                   #
+                                                                            #
+#############################################################################
+                                                                            #
+                                                                            #
+#############################################################################
+# Button for toggling play and pause                                        #
+#############################################################################
+                                                                            #
+def toggle_play(event):                                                     #
+    global PLAY                                                             #
+    PLAY = not PLAY                                                         #
+    if PLAY:                                                                #
+        play_button.label.set_text("Pause")                                 #
+    else:                                                                   #
+        play_button.label.set_text("Play")                                  #
+    #plt.draw()                                                             #
+                                                                            #
+                                                                            #
+play_ax = plt.axes([0.25,0.01,0.5,0.04])  # Adjust position as needed       #
+play_button = Button(play_ax, 'Pause' if PLAY else 'Play')                  #
+play_button.on_clicked(toggle_play)                                         #
+                                                                            #
+#############################################################################
+
+
+
+
+
+
+
+#############################################################################
+#Checkboxes and Radios                                                      #
+                                                                            #
+                                                                            #
+#############################################################################
+# Checkbox setup for finding the stationary speed                           #
+#############################################################################
+                                                                            #
+clist = []                                                                  #
+maxima_x = []                                                               #
+dc = 0.1                                                                    #
+def Create_CList(event):                                                    #
+    global clist                                                            #
+    global maxima_x                                                         #
+    global dc                                                               #
+                                                                            #
+    clist = []                                                              #
+    maxima_x = []                                                           #
+    dc = 0.1                                                                #
+                                                                            #
+#checkbox: automatically adjusts c                                          #
+checkbox_ax = plt.axes([0.8,0.7,0.2,0.1]) #left, bottom, width and height   #
+checkbox = CheckButtons(checkbox_ax,['Find speed'],[False])                 #
+checkbox.on_clicked(Create_CList)                                           #
+                                                                            #
+#############################################################################
+# Radio setup for changing the employed model                               #
+#############################################################################
+                                                                            #
+# Add RadioButtons                                                          #
+rax = plt.axes([0.8, 0.5, 0.2, 0.15])  # [left, bottom, width, height]      #
+radio = RadioButtons(rax, tuple(model_map.keys()))                          #
+                                                                            #
+# Event handler                                                             #
+def select_model(label):                                                    #
+    global model_func                                                       #
+    model_func = model_map[label]                                           #
+                                                                            #
+    if model_func == FHN:                                                   #
+        ax.set_ylim(-0.5,1)                                                 #
+                                                                            #
+    elif model_func in (Karma_Ramp,Karma_Step):                             #
+        ax.set_ylim([-1, 6])                                                #
+                                                                            #
+    else:                                                                   #
+        ax.set_ylim([-100,100])#[-1, 6])                                    #
+                                                                            #
+                                                                            #
+    #Run this so if the algorithm is being run it ets reset                 #
+    Create_CList(True)                                                      #
+                                                                            #
+                                                                            #
+radio.on_clicked(select_model)                                              #
+#############################################################################
 
 
 
