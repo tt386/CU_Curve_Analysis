@@ -605,18 +605,26 @@ def update_plot(frame):
             if checkbox.get_status()[0] == True:
                 global dc
 
+<<<<<<< HEAD
                 """
                 if model_func in (Morris_Lecar,Karma_Ramp):
+=======
+
+                if model_func == Morris_Lecar:
+>>>>>>> 7fba4e81548bdb04550715e0c5d1940299ba95f5
                     #print(maxima_x)
 
                     new_max = np.argmax(u_new)
 
                 else:
                     new_max = np.argmax(v_new)#v_new)
+<<<<<<< HEAD
                 """
 
                 new_max = np.argmax(u_new)
 
+=======
+>>>>>>> 7fba4e81548bdb04550715e0c5d1940299ba95f5
 
                 #populate a list of locations of maxima
                 if len(maxima_x) ==0:
