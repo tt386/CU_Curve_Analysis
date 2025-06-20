@@ -38,7 +38,7 @@ x_max = N / 2
 x = np.linspace(-x_max / 2, x_max / 2, N)
 k = 2 * np.pi * np.fft.fftfreq(N, x_max / N)
 
-I0 = 0.0#-0.5
+I0 = 0.01#-0.5
 I = np.ones(len(x)) * (I0)
 Ihat = fft(I)
 dt = 0.1
