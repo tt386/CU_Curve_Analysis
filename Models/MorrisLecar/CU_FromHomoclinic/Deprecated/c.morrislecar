@@ -1,0 +1,11 @@
+parnames = {1:'I', 16:'c'}
+unames = {1: 'v', 2:'y', 3:'n'}
+NDIM=   3, IPS =   1, IRS =   0, ILP =   0
+ICP =  ['I','c']
+NTST=   100, NCOL=   4, IAD =   3, ISP =   2, ISW = 1, IPLT= 0, NBC= 0, NINT= 0
+NMX=  200, NPR=   20, MXBF=   0, IID =   2, ITMX= 8, ITNW= 5, NWTN= 3, JAC= 0
+EPSL= 1e-08, EPSU = 1e-08, EPSS =0.000001
+DS  =  0.01, DSMIN= 0.0001, DSMAX=   0.1, IADS=   1
+NPAR = 17, THL =  {}, THU =  {}
+UZSTOP = {'I': [-20, 40],'c': [-1,5]}
+
